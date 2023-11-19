@@ -25,10 +25,12 @@ enum Tile: Equatable {
 
 enum XPos: Int, CaseIterable {
     case a = 0, b, c, d, e, f, g, h
+    var isEdge: Bool { self == .a || self == .h }
 }
 
 enum YPos: Int, CaseIterable {
     case _1 = 0, _2, _3, _4, _5, _6, _7, _8
+    var isEdge: Bool { self == ._1 || self == ._8 }
 }
 
 class Board {
@@ -48,14 +50,8 @@ class Board {
     }
     
     init() {
-        tiles = [[Tile]]()
-        (0..<8).forEach { y in
-            var row = [Tile]()
-            (0..<8).forEach { x in
-                row.append(.empty)
-            }
-            tiles.append(row)
-        }
+        tiles = (0..<8).map { (_) -> [Tile] in 
+            Array<Tile>(repeating: .empty, count: 8) }
     }
     
     func setupStandardBoard() {
@@ -78,18 +74,35 @@ class Board {
         }
     }
     
-    func getTileFlips(for player: Player, at pos: (XPos, YPos)) -> [(XPos, YPos)] {
+    func isLegalMove(for player: Player, at pos: (XPos, YPos)) -> Bool {
+        !getTileFlips(for: player, at: pos).isEmpty
+    }
+    
+    func computerMoveSearch(for player: Player) -> [Int: [(XPos, YPos)]] {
+        var score = [Int: [(XPos, YPos)]]()
+        for x in XPos.allCases {
+            for y in YPos.allCases {
+                let result = getTileFlips(for: player, at: (x, y))
+                if !result.isEmpty {
+                    score[result.count, default: []].append((x, y))
+                }
+            }
+        }
+        return score
+    }
+    
+    private func getTileFlips(for player: Player, at pos: (XPos, YPos)) -> [(XPos, YPos)] {
         Direction.allCases.flatMap { direction in
             accumulate(for: player, heading: direction, from: pos) ?? []
         }
     }
     
-    func accumulate(
+    private func accumulate(
         for player: Player,
         heading direction: Direction,
         from pos: (XPos, YPos)) -> [(XPos, YPos)]? {
         
-            guard let nextPos = direction.head(from: pos) else { return nil }
+            guard let nextPos = direction.next(from: pos) else { return nil }
             if self[nextPos].isEmpty { return nil }
             
             // found player's color
@@ -128,7 +141,7 @@ enum Direction: CaseIterable {
         }
     }
     
-    func head(from pos: (XPos, YPos)) -> (XPos, YPos)? {
+    func next(from pos: (XPos, YPos)) -> (XPos, YPos)? {
         let xVec = pos.0.rawValue + vector.0
         let yVec = pos.1.rawValue + vector.1
         

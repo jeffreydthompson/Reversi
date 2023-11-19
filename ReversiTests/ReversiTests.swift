@@ -31,7 +31,7 @@ final class ReversiTests: XCTestCase {
     
     func testInitFromString() throws {
         
-        var newBoard = Board()
+        let newBoard = Board()
         newBoard[(.b, ._1)] = .white
         newBoard[(.c, ._1)] = .white
         XCTAssertEqual(newBoard.debugString, testStrSetup)
@@ -43,36 +43,12 @@ final class ReversiTests: XCTestCase {
         XCTAssertEqual(tstBoard.debugString, testAccumulationString)
     }
     
-    func testAccumulation() throws {
-        guard var tstBoard = Board(from: testAccumulationString) else {
-            throw NilError()
-        }
-        
-        let spaces = tstBoard.accumulate(for: .white, heading: .west, from: (.g, ._5))
-        XCTAssertNotNil(spaces)
-        guard let spaces = spaces else {
-            throw NilError()
-        }
-        XCTAssertEqual(spaces.count, 3)
-        XCTAssert(spaces.contains(where: { pos in
-            pos == (.f, ._5)
-        }))
-        
-        let allDir = Direction.allCases.flatMap { direction in
-            tstBoard.accumulate(for: .black, heading: direction, from: (.c, ._4)) ?? []
-        }
-        
-        XCTAssertEqual(allDir.count, 3)
-    }
-    
     func testMoveLegality() throws {
-        guard var tstBoard = Board(from: testAccumulationString) else {
+        guard let tstBoard = Board(from: testAccumulationString) else {
             throw NilError()
         }
-        let allDir = Direction.allCases.flatMap { direction in
-            tstBoard.accumulate(for: .black, heading: direction, from: (.h, ._4)) ?? []
-        }
-        XCTAssert(allDir.isEmpty)
+        XCTAssertFalse(tstBoard.isLegalMove(for: .black, at: (.h, ._4)))
+        XCTAssertFalse(tstBoard.isLegalMove(for: .white, at: (.c, ._4)))
     }
     
     func testPlacementErrors() throws {
@@ -82,8 +58,23 @@ final class ReversiTests: XCTestCase {
         XCTAssertThrowsError(try sut.playerSet(player: .black, at: (.f, ._4)))
     }
     
+    func testComputerMoveSearch() throws {
+        guard let tstBoard = Board(from: testAccumulationString) else {
+            throw NilError()
+        }
+        let moves = tstBoard.computerMoveSearch(for: .black)
+        let best = moves.keys.map { $0 }.sorted().reversed()
+        XCTAssertEqual(3, best.first ?? -1)
+        guard let bestMoves = moves[3] else {
+            throw NilError()
+        }
+        XCTAssert(bestMoves.contains(where: { pos in
+            pos == (.c, ._4)
+        }))
+    }
+    
     func testPlacementChanges() throws {
-        guard var tstBoard = Board(from: testAccumulationString) else {
+        guard let tstBoard = Board(from: testAccumulationString) else {
             throw NilError()
         }
         XCTAssertNoThrow(try tstBoard.playerSet(player: .black, at: (.c, ._4)))
