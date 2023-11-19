@@ -14,6 +14,9 @@
 		97533D982B087A5500B9CB7D /* ReversiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97533D972B087A5500B9CB7D /* ReversiTests.swift */; };
 		97533DA22B087A5500B9CB7D /* ReversiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97533DA12B087A5500B9CB7D /* ReversiUITests.swift */; };
 		97533DA42B087A5500B9CB7D /* ReversiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97533DA32B087A5500B9CB7D /* ReversiUITestsLaunchTests.swift */; };
+		97533DB12B087A6C00B9CB7D /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97533DB02B087A6C00B9CB7D /* Board.swift */; };
+		97BA4D692B0884E500F7D21A /* ReversiTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BA4D682B0884E500F7D21A /* ReversiTestHelpers.swift */; };
+		97BA4D6B2B0A2DD500F7D21A /* Board+TestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BA4D6A2B0A2DD500F7D21A /* Board+TestExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,9 @@
 		97533D9D2B087A5500B9CB7D /* ReversiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReversiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		97533DA12B087A5500B9CB7D /* ReversiUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversiUITests.swift; sourceTree = "<group>"; };
 		97533DA32B087A5500B9CB7D /* ReversiUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversiUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		97533DB02B087A6C00B9CB7D /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		97BA4D682B0884E500F7D21A /* ReversiTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversiTestHelpers.swift; sourceTree = "<group>"; };
+		97BA4D6A2B0A2DD500F7D21A /* Board+TestExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Board+TestExtensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +104,7 @@
 				97533D882B087A5300B9CB7D /* ContentView.swift */,
 				97533D8A2B087A5500B9CB7D /* Assets.xcassets */,
 				97533D8C2B087A5500B9CB7D /* Preview Content */,
+				97533DB02B087A6C00B9CB7D /* Board.swift */,
 			);
 			path = Reversi;
 			sourceTree = "<group>";
@@ -114,6 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				97533D972B087A5500B9CB7D /* ReversiTests.swift */,
+				97BA4D682B0884E500F7D21A /* ReversiTestHelpers.swift */,
+				97BA4D6A2B0A2DD500F7D21A /* Board+TestExtensions.swift */,
 			);
 			path = ReversiTests;
 			sourceTree = "<group>";
@@ -259,6 +268,7 @@
 			files = (
 				97533D892B087A5300B9CB7D /* ContentView.swift in Sources */,
 				97533D872B087A5300B9CB7D /* ReversiApp.swift in Sources */,
+				97533DB12B087A6C00B9CB7D /* Board.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +276,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97BA4D6B2B0A2DD500F7D21A /* Board+TestExtensions.swift in Sources */,
+				97BA4D692B0884E500F7D21A /* ReversiTestHelpers.swift in Sources */,
 				97533D982B087A5500B9CB7D /* ReversiTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
