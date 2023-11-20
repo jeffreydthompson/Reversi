@@ -10,10 +10,24 @@ import Foundation
 enum Player {
     case white, black
     
+    var toggle: Player {
+        switch self {
+        case .white: return .black
+        case .black: return .white
+        }
+    }
+    
     var associatedTile: Tile {
         switch self {
         case .white: return .white
         case .black: return .black
+        }
+    }
+    
+    var description: String {
+        switch self {
+        case .white: "White"
+        case .black: "Black"
         }
     }
 }
@@ -23,13 +37,15 @@ enum Tile: Equatable {
     var isEmpty: Bool { self == .empty }
 }
 
-enum XPos: Int, CaseIterable {
+enum XPos: Int, CaseIterable, Identifiable {
     case a = 0, b, c, d, e, f, g, h
+    var id: Int { rawValue }
     var isEdge: Bool { self == .a || self == .h }
 }
 
-enum YPos: Int, CaseIterable {
+enum YPos: Int, CaseIterable, Identifiable {
     case _1 = 0, _2, _3, _4, _5, _6, _7, _8
+    var id: Int { rawValue }
     var isEdge: Bool { self == ._1 || self == ._8 }
 }
 
@@ -82,6 +98,7 @@ class Board {
         var score = [Int: [(XPos, YPos)]]()
         for x in XPos.allCases {
             for y in YPos.allCases {
+                guard self[x,y].isEmpty else { continue }
                 let result = getTileFlips(for: player, at: (x, y))
                 if !result.isEmpty {
                     score[result.count, default: []].append((x, y))

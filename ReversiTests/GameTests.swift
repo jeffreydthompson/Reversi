@@ -22,12 +22,25 @@ final class GameTests: XCTestCase {
 
     func testComputerMove() throws {
         sut.turn = .black
-        try sut.computerCalculateMove()
+        sut.computerCalculateMove()
         let count = sut.board.totals
         XCTAssertEqual(count.white, 0)
         XCTAssertEqual(count.black, 11)
         XCTAssertEqual(count.empty, 53)
         print(sut.board.debugString)
+    }
+    
+    func testSearchMoves() throws {
+        sut = Game(customBoard: Board(from: testMoveSearch)!)
+        sut.human = .black
+        sut.turn = .white
+        
+        let moves = sut.board.computerMoveSearch(for: .white)
+        let pos = moves.values.flatMap({ $0 })
+        
+        XCTAssertFalse(pos.contains(where: {
+            $0.0 == .a && $0.1 == ._8
+        }))
     }
 
     func testPerformanceExample() throws {
