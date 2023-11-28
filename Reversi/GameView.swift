@@ -51,7 +51,6 @@ struct GameView: View {
                 ForEach(XPos.allCases) { x in
                     HStack(spacing: .zero) {
                         ForEach(YPos.allCases) { y in
-//                            tileImageView(game.board[x,y])
                             button((x, y))
                         }
                     }

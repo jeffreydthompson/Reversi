@@ -41,7 +41,7 @@ class Game {
     }
     
     func reset() {
-        self.board.setupStandardBoard()
+        self.board.reset()
         self.turn = .black
         asyncSetState(.normal)
     }

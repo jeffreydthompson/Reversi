@@ -70,6 +70,12 @@ class Board {
             Array<Tile>(repeating: .empty, count: 8) }
     }
     
+    func reset() {
+        tiles = (0..<8).map { (_) -> [Tile] in
+            Array<Tile>(repeating: .empty, count: 8) }
+        setupStandardBoard()
+    }
+    
     func setupStandardBoard() {
         self[.d, ._4] = .white
         self[.e, ._5] = .white
