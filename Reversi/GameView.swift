@@ -51,7 +51,6 @@ struct GameView: View {
                 ForEach(XPos.allCases) { x in
                     HStack(spacing: .zero) {
                         ForEach(YPos.allCases) { y in
-//                            tileImageView(game.board[x,y])
                             button((x, y))
                         }
                     }
@@ -92,4 +91,97 @@ struct GameView: View {
 
 #Preview {
     GameView(game: Game(human: .black))
+}
+
+struct ReversiGameView: View {
+    
+    @State var vm: ReversiGameViewModel
+    
+    var body: some View {
+        switch vm.state {
+        case .unitialized: Button("Start") {
+            vm.initializeGame(white: .human, black: .human)
+        }
+        case .inPlay(set: let set, board: let board): VStack {
+            Text("Turn: \(set.turn)")
+            BoardView(board: board) { x, y in
+                try? vm.move(to: .init(x: x, y: y), for: set, on: board)
+            }
+        }
+        case .tie(board: let board):
+            VStack {
+                Text("It's a tie")
+                BoardView(board: board)
+            }
+            .overlay {
+                Button("play again") {
+                    vm.initializeGame(white: .human, black: .human)
+                }
+            }
+        case .win(player: let player, board: let board):
+            VStack {
+                Text("Turn: \(player) wins")
+                BoardView(board: board)
+            }
+            .overlay {
+                Button("play again") {
+                    vm.initializeGame(white: .human, black: .human)
+                }
+            }
+        }
+    }
+}
+
+struct BoardView: View {
+    
+    var board: ReversiBoard
+    var didPress: ((XPos, YPos) -> Void)? = nil
+    
+    var body: some View {
+        VStack(spacing: .zero) {
+            ForEach(YPos.allCases.reversed()) { y in
+                HStack(spacing: .zero) {
+                    ForEach(XPos.allCases) { x in
+                        button((x, y))
+                    }
+                }
+            }
+        }
+    }
+    
+    func button(_ pos: (XPos, YPos)) -> some View {
+        Button(action: {
+            didPress?(pos.0, pos.1)
+        }, label: {
+            tileImageView(board[.init(x: pos.0, y: pos.1)])
+        })
+    }
+    
+    func tileImageView(_ tile: Square) -> some View {
+        Group {
+            switch tile {
+            case .empty: 
+                return Image(systemName: "square.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.green)
+            case .occupied(let coin):
+                return Image(systemName: "circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(coin.color)
+            }
+        }
+    }
+}
+
+extension Coin {
+    var color: Color {
+        switch self {
+        case .black:
+            return .black
+        case .white:
+            return .white
+        }
+    }
 }

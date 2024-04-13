@@ -14,6 +14,7 @@ final class ReversiTests: XCTestCase {
     
     //system under test
     var sut = Board()
+    var rsut = ReversiBoard()
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -41,6 +42,16 @@ final class ReversiTests: XCTestCase {
         }
         
         XCTAssertEqual(tstBoard.debugString, testAccumulationString)
+        
+        var sqs = Array(repeating: Array(repeating: Square.empty, count: 8), count: 8)
+        
+        sqs[YPos._1.rawValue][XPos.b.rawValue] = .occupied(.white)
+        sqs[YPos._1.rawValue][XPos.c.rawValue] = .occupied(.white)
+        let rBoard = ReversiBoard(squares: sqs)
+        XCTAssertEqual(rBoard.debugString, testStrSetup)
+        
+        let newRBoard = ReversiBoard(from: testAccumulationString)
+        XCTAssertEqual(newRBoard?.debugString, testAccumulationString)
     }
     
     func testMoveLegality() throws {
@@ -49,6 +60,12 @@ final class ReversiTests: XCTestCase {
         }
         XCTAssertFalse(tstBoard.isLegalMove(for: .black, at: (.h, ._4)))
         XCTAssertFalse(tstBoard.isLegalMove(for: .white, at: (.c, ._4)))
+        
+        guard let rsut = ReversiBoard(from: testAccumulationString) else {
+            throw NilError()
+        }
+        XCTAssertFalse(rsut.checkIsMoveLegal(for: .black, at: .init(x: .h, y: ._4)))
+        XCTAssertFalse(rsut.checkIsMoveLegal(for: .white, at: .init(x: .c, y: ._4)))
     }
     
     func testPlacementErrors() throws {
@@ -56,6 +73,11 @@ final class ReversiTests: XCTestCase {
         XCTAssertThrowsError(try sut.playerSet(player: .white, at: (.f, ._5)))
         XCTAssertThrowsError(try sut.playerSet(player: .black, at: (.f, ._6)))
         XCTAssertThrowsError(try sut.playerSet(player: .black, at: (.f, ._4)))
+        
+        XCTAssertThrowsError(try rsut.set(.black, at: .init(x: .a, y: ._1)))
+        XCTAssertThrowsError(try rsut.set(.white, at: .init(x: .f, y: ._5)))
+        XCTAssertThrowsError(try rsut.set(.black, at: .init(x: .f, y: ._6)))
+        XCTAssertThrowsError(try rsut.set(.black, at: .init(x: .f, y: ._4)))
     }
     
     func testComputerMoveSearch() throws {
@@ -84,7 +106,14 @@ final class ReversiTests: XCTestCase {
         XCTAssertEqual(count.empty, 53)
         print(tstBoard.debugString)
     }
-
+    
+    func testSquareCreation() throws {
+        let wht = "⚪️"
+        let blk = "⚫️"
+        let grn = "🟩"
+        
+    }
+    
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {

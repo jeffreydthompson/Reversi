@@ -11,7 +11,8 @@ import SwiftUI
 struct ReversiApp: App {
     var body: some Scene {
         WindowGroup {
-            GameView(game: Game(human: .black))
+//            GameView(game: Game(human: .black))
+            ReversiGameView(vm: .init())
         }
     }
 }

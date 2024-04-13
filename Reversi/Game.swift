@@ -122,3 +122,79 @@ class Game {
         }
     }
 }
+
+enum MoveError: Error {
+    case alreadyOccupied
+    case illegalMove
+}
+
+enum ReversiGame {
+    case unitialized
+    case inPlay(set: PlayersSet, board: ReversiBoard)
+    case tie(board: ReversiBoard)
+    case win(player: ReversiPlayer, board: ReversiBoard)
+    
+    static func computerMove(
+        set: PlayersSet,
+        on board: ReversiBoard) -> ReversiGame {
+        
+            return .unitialized
+        }
+    
+    static func humanMove(
+        to coordinate: Coordinate,
+        set: PlayersSet,
+        on board: ReversiBoard) throws -> ReversiGame {
+            let copyBoard = try board.set(set.turn.coin, at: coordinate)
+            return ReversiGame.processMove(for: set, on: copyBoard)
+        }
+    
+    static func processMove(
+        for set: PlayersSet,
+        on board: ReversiBoard) -> ReversiGame {
+            
+            if board.checkCanMove(for: set.turnOpponent.coin) {
+                let copySet = set.switchTurn()
+                return .inPlay(set: copySet, board: board)
+            } else if board.checkCanMove(for: set.turn.coin) {
+                return .inPlay(set: set, board: board)
+            } else { // then end condition met.
+                let turnPositions = board.getPositionsFor(square: .occupied(set.turn.coin))
+                let opponentPositions = board.getPositionsFor(square: .occupied(set.turnOpponent.coin))
+                
+                if turnPositions.count > opponentPositions.count {
+                    return .win(player: set.turn, board: board)
+                } else if turnPositions.count < opponentPositions.count {
+                    return .win(player: set.turnOpponent, board: board)
+                } else {
+                    return .tie(board: board)
+                }
+            }
+        }
+}
+
+@Observable
+class ReversiGameViewModel {
+    var state = ReversiGame.unitialized
+    
+    func move(
+        to coordinate: Coordinate,
+        for set: PlayersSet,
+        on board: ReversiBoard) throws {
+            print(coordinate)
+            do {
+                state = try ReversiGame
+                    .humanMove(to: coordinate, set: set, on: board)
+            } catch {
+                print("error: \(error.localizedDescription)")
+            }
+        }
+    
+    func initializeGame(
+        white wType: PlayerType,
+        black bType: PlayerType) {
+            let set = PlayersSet.blackTurn(black: .black(bType), white: .white(wType))
+            let board = ReversiBoard()
+            state = .inPlay(set: set, board: board)
+        }
+}

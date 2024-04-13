@@ -15,6 +15,8 @@
 		97533DA22B087A5500B9CB7D /* ReversiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97533DA12B087A5500B9CB7D /* ReversiUITests.swift */; };
 		97533DA42B087A5500B9CB7D /* ReversiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97533DA32B087A5500B9CB7D /* ReversiUITestsLaunchTests.swift */; };
 		97533DB12B087A6C00B9CB7D /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97533DB02B087A6C00B9CB7D /* Board.swift */; };
+		9784D5E62B75E71B00187D25 /* Heuristics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9784D5E52B75E71B00187D25 /* Heuristics.swift */; };
+		9784D5E82B75ECC100187D25 /* Minimax.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9784D5E72B75ECC100187D25 /* Minimax.swift */; };
 		97BA4D692B0884E500F7D21A /* ReversiTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BA4D682B0884E500F7D21A /* ReversiTestHelpers.swift */; };
 		97BA4D6B2B0A2DD500F7D21A /* Board+TestExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BA4D6A2B0A2DD500F7D21A /* Board+TestExtensions.swift */; };
 		97BA4D6D2B0A699B00F7D21A /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BA4D6C2B0A699B00F7D21A /* Game.swift */; };
@@ -51,6 +53,8 @@
 		97533DA12B087A5500B9CB7D /* ReversiUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversiUITests.swift; sourceTree = "<group>"; };
 		97533DA32B087A5500B9CB7D /* ReversiUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversiUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		97533DB02B087A6C00B9CB7D /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		9784D5E52B75E71B00187D25 /* Heuristics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Heuristics.swift; sourceTree = "<group>"; };
+		9784D5E72B75ECC100187D25 /* Minimax.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Minimax.swift; sourceTree = "<group>"; };
 		97BA4D682B0884E500F7D21A /* ReversiTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversiTestHelpers.swift; sourceTree = "<group>"; };
 		97BA4D6A2B0A2DD500F7D21A /* Board+TestExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Board+TestExtensions.swift"; sourceTree = "<group>"; };
 		97BA4D6C2B0A699B00F7D21A /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
@@ -113,6 +117,8 @@
 				97533DB02B087A6C00B9CB7D /* Board.swift */,
 				97BA4D6C2B0A699B00F7D21A /* Game.swift */,
 				97BA4D702B0A7C4800F7D21A /* GameView.swift */,
+				9784D5E52B75E71B00187D25 /* Heuristics.swift */,
+				9784D5E72B75ECC100187D25 /* Minimax.swift */,
 			);
 			path = Reversi;
 			sourceTree = "<group>";
@@ -279,6 +285,8 @@
 				97533D872B087A5300B9CB7D /* ReversiApp.swift in Sources */,
 				97533DB12B087A6C00B9CB7D /* Board.swift in Sources */,
 				97BA4D6D2B0A699B00F7D21A /* Game.swift in Sources */,
+				9784D5E62B75E71B00187D25 /* Heuristics.swift in Sources */,
+				9784D5E82B75ECC100187D25 /* Minimax.swift in Sources */,
 				97BA4D712B0A7C4800F7D21A /* GameView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
