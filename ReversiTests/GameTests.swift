@@ -10,7 +10,7 @@ import XCTest
 
 final class GameTests: XCTestCase {
     
-    var sut = Game(customBoard: Board(from: testAccumulationString)!)
+    var sut = Game.uninitiated
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -20,27 +20,47 @@ final class GameTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testComputerMove() throws {
-        sut.turn = .black
-        sut.computerCalculateMove()
-        let count = sut.board.totals
-        XCTAssertEqual(count.white, 0)
-        XCTAssertEqual(count.black, 11)
-        XCTAssertEqual(count.empty, 53)
-        print(sut.board.debugString)
+    func testGetLegalMoves() throws {
+        let b = Board(from: testAccumulationString) ?? Board()
+        let moves = getLegalMoves(for: .black(.computer), on: b)
+        XCTAssertEqual(moves.count, 6)
+        
+        let expected = [
+            Coordinate(x: .b, y: ._6),
+            Coordinate(x: .b, y: ._5),
+            Coordinate(x: .c, y: ._4),
+            Coordinate(x: .c, y: ._3),
+            Coordinate(x: .c, y: ._2),
+            Coordinate(x: .d, y: ._2)
+        ]
+        let s = Set(expected)
+        XCTAssertEqual(s, moves)
     }
     
-    func testSearchMoves() throws {
-        sut = Game(customBoard: Board(from: testMoveSearch)!)
-        sut.human = .black
-        sut.turn = .white
+    func testMove() throws {
+        let b = Board(from: testAccumulationString) ?? Board()
+        let ps = PlayerSet(white: .human, black: .computer)
         
-        let moves = sut.board.computerMoveSearch(for: .white)
-        let pos = moves.values.flatMap({ $0 })
+        sut = try makeComputerMove(players: ps, board: b)
+        guard case .win(let board, let player) = sut else {
+            XCTAssert(false)
+            return
+        }
+
+        let expectedB = Board(from: testComputerMoveResult) ?? Board()
+        XCTAssertEqual(board.debugString, expectedB.debugString)
+    }
+    
+    func testEval() throws {
+        let b = Board(from: testEvalStr) ?? Board()
+        let ps = PlayerSet(white: .human, black: .computer)
         
-        XCTAssertFalse(pos.contains(where: {
-            $0.0 == .a && $0.1 == ._8
-        }))
+        sut = evaluate(board: b, for: ps)
+        guard case .inPlay(players: let players, board: let board) = sut else {
+            XCTAssert(false)
+            return
+        }
+        XCTAssertEqual(players.turn, ps.turn)
     }
 
     func testPerformanceExample() throws {
@@ -50,4 +70,10 @@ final class GameTests: XCTestCase {
         }
     }
 
+}
+
+extension Player: Equatable {
+    public static func == (lhs: Player, rhs: Player) -> Bool {
+        lhs.coin == rhs.coin
+    }
 }

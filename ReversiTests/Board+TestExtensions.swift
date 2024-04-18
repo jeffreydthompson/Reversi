@@ -12,15 +12,15 @@ extension Tile {
     var rawValue: String {
         switch self {
         case .empty: "🟩"
-        case .white: "⚪️"
-        case .black: "⚫️"
+        case .occupied(let player):
+            player == .white ? "⚪️" : "⚫️"
         }
     }
     
     init?(rawValue: String) {
         if rawValue == "🟩" { self = .empty; return }
-        if rawValue == "⚫️" { self = .black; return }
-        if rawValue == "⚪️" { self = .white; return }
+        if rawValue == "⚫️" { self = .occupied(.black); return }
+        if rawValue == "⚪️" { self = .occupied(.white); return }
         return nil
     }
 }
@@ -34,26 +34,27 @@ extension Player {
     }
     
     init?(rawValue: String) {
-        if rawValue == "⚫️" { self = .black; return }
-        if rawValue == "⚪️" { self = .white; return }
+        if rawValue == "⚫️" { self = .black(.computer); return }
+        if rawValue == "⚪️" { self = .white(.computer); return }
         return nil
     }
 }
 
 extension Board {
     
-    convenience init?(from string: String) {
+    init?(from string: String) {
         let arys = string.split(separator: "\n")
         guard arys.count == 8 else { return nil }
         guard arys.reduce(true, { partialResult, ary in
             partialResult && ary.count == 8
         }) else { return nil }
-        self.init()
-        tiles = arys.reversed().map { ary in
+
+        let tiles = arys.reversed().map { ary in
             ary.compactMap { char in
                 Tile(rawValue: "\(char)")
             }
         }
+        self = .init(tiles: tiles)
     }
     
     var debugString: String {

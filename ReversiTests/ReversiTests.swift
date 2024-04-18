@@ -13,11 +13,10 @@ struct NilError: Error { }
 final class ReversiTests: XCTestCase {
     
     //system under test
-    var sut = Board()
+    var sut = Board.defaultBoard()
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        sut.setupStandardBoard()
     }
 
     override func tearDownWithError() throws {
@@ -31,9 +30,10 @@ final class ReversiTests: XCTestCase {
     
     func testInitFromString() throws {
         
-        let newBoard = Board()
-        newBoard[(.b, ._1)] = .white
-        newBoard[(.c, ._1)] = .white
+        var tiles = Board().tiles
+        tiles[(.b, ._1)] = .occupied(.white)
+        tiles[(.c, ._1)] = .occupied(.white)
+        let newBoard = Board(tiles: tiles)
         XCTAssertEqual(newBoard.debugString, testStrSetup)
         
         guard let tstBoard = Board(from: testAccumulationString) else {
@@ -47,15 +47,15 @@ final class ReversiTests: XCTestCase {
         guard let tstBoard = Board(from: testAccumulationString) else {
             throw NilError()
         }
-        XCTAssertFalse(tstBoard.isLegalMove(for: .black, at: (.h, ._4)))
-        XCTAssertFalse(tstBoard.isLegalMove(for: .white, at: (.c, ._4)))
+        XCTAssertFalse(tstBoard.isLegalMove(for: .black, at: Coordinate(x: .h, y: ._4)))
+        XCTAssertFalse(tstBoard.isLegalMove(for: .white, at: Coordinate(x: .c, y: ._4)))
     }
     
     func testPlacementErrors() throws {
-        XCTAssertThrowsError(try sut.playerSet(player: .black, at: (.a, ._1)))
-        XCTAssertThrowsError(try sut.playerSet(player: .white, at: (.f, ._5)))
-        XCTAssertThrowsError(try sut.playerSet(player: .black, at: (.f, ._6)))
-        XCTAssertThrowsError(try sut.playerSet(player: .black, at: (.f, ._4)))
+        XCTAssertThrowsError(try sut.set(coin: .black, at: Coordinate(x: .a, y: ._1)))
+        XCTAssertThrowsError(try sut.set(coin: .white, at: Coordinate(x: .f, y: ._5)))
+        XCTAssertThrowsError(try sut.set(coin: .black, at: Coordinate(x: .f, y: ._6)))
+        XCTAssertThrowsError(try sut.set(coin: .black, at: Coordinate(x: .f, y: ._4)))
     }
     
     func testComputerMoveSearch() throws {
@@ -69,26 +69,48 @@ final class ReversiTests: XCTestCase {
             throw NilError()
         }
         XCTAssert(bestMoves.contains(where: { pos in
-            pos == (.c, ._4)
+            pos == Coordinate(x: .c, y: ._4)
         }))
     }
     
     func testPlacementChanges() throws {
-        guard let tstBoard = Board(from: testAccumulationString) else {
+        guard let setupBoard = Board(from: testAccumulationString) else {
             throw NilError()
         }
-        XCTAssertNoThrow(try tstBoard.playerSet(player: .black, at: (.c, ._4)))
-        let count = tstBoard.totals
+        let tstBoard = try setupBoard.set(coin: .black, at: Coordinate(x: .c, y: ._4))
+        var count = (white: 0, black: 0, empty: 0)
+        count.white = tstBoard.tiles.getCount(ofType: .occupied(.white))
+        count.black = tstBoard.tiles.getCount(ofType: .occupied(.black))
+        count.empty = tstBoard.tiles.getCount(ofType: .empty)
+        
         XCTAssertEqual(count.white, 0)
         XCTAssertEqual(count.black, 11)
         XCTAssertEqual(count.empty, 53)
         print(tstBoard.debugString)
     }
-
+    
+    func testSetStable() {
+        sut = Board(from: testEvalStr)!
+        sut = sut.setStable()
+        
+        XCTAssertEqual(sut.stableCoins.count, 27)
+        
+        sut = Board(from: testMoveSearch)!
+        sut = sut.setStable()
+        
+        XCTAssertEqual(sut.stableCoins.count, 1)
+    }
+    
+    func testHasLegalMoves() throws {
+        let b = Board(from: testEvalStr)!
+        XCTAssertFalse(b.hasLegalMoves(for: .white))
+    }
+    
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {
-            // Put the code you want to measure the time of here.
+            sut = Board(from: testStables) ?? Board()
+            sut = sut.setStable()
         }
     }
 }
